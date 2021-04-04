@@ -1,0 +1,11 @@
+# Classics
+__pycache__/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Flask stuff:
+instance/
+.webassets-cache
