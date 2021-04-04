@@ -9,3 +9,5 @@ venv/
 # Flask stuff:
 instance/
 .webassets-cache
+
+full_images/
