@@ -9,7 +9,7 @@ from time import sleep
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
-if bool(os.getenv['FLASK_REVERSE_PROXY']):
+if bool(os.getenv('FLASK_REVERSE_PROXY')):
     # Use this if you're using a reverse-proxy to get real IPs
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
 
