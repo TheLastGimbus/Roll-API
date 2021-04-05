@@ -1,12 +1,17 @@
 import gpiozero
+import os
 import pathlib
 import subprocess
 import uuid
 from flask import Flask
 from flask import send_file
 from time import sleep
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
+if bool(os.environ['FLASK_REVERSE_PROXY']):
+    # Use this if you're using a reverse-proxy to get real IPs
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
 
 API1 = '/api/v1'
 
