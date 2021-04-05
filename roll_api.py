@@ -39,4 +39,13 @@ def roll():
 def image(image_id):
     id = str(image_id)
     job = queue.fetch_job(id)
-    return send_file(io.BytesIO(job.result), mimetype='image/jpeg', attachment_filename=f'{id}.jpg')
+    if job is None:
+        return "EXPIRED", 410
+    elif job.get_status() == "finished":
+        return send_file(io.BytesIO(job.result), mimetype='image/jpeg', attachment_filename=f'{id}.jpg')
+    elif job.get_status() == "failed":
+        return "Your request was failed - I messed something up, sorry :(", 500
+    elif job.get_status() == "started":
+        return "RUNNING"
+    elif job.get_status() in ["queued", "deferred"]:
+        return "QUEUED"
