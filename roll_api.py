@@ -13,7 +13,7 @@ if bool(os.getenv('FLASK_REVERSE_PROXY')):
     # Use this if you're using a reverse-proxy to get real IPs
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
 
-API1 = '/api/v1'
+API1 = '/api/v1/'
 
 FULL_IMAGES = pathlib.Path('full_images/')
 
@@ -42,7 +42,7 @@ def hello():
     return "Hello there!"
 
 
-@app.route(API1 + '/roll')
+@app.route(API1 + 'roll/')
 def roll():
     roll_dice()
     image_id = str(uuid.uuid4())
@@ -52,6 +52,6 @@ def roll():
     return {'full_image_id': image_id}
 
 
-@app.route(API1 + '/image/<uuid:image_id>')
+@app.route(API1 + 'image/<uuid:image_id>/')
 def image(image_id):
     return send_file(FULL_IMAGES / f'{image_id}.jpg')
