@@ -51,6 +51,19 @@ def _handle_status(job, finished_func):
         return "QUEUED"
 
 
+@app.route(API1 + 'info/<uuid:job_id>/')
+def info(job_id):
+    job_id = str(job_id)
+    r = queue_vision.deferred_job_registry
+    all_jobs = r.get_job_ids()
+    try:
+        index = all_jobs.index(job_id)
+        left = len(r.get_job_ids(end=index))
+    except ValueError:
+        left = 0
+    return {'queue': left}
+
+
 @app.route(API1 + 'result/<uuid:job_id>/')
 def result(job_id):
     job = queue_vision.fetch_job(str(job_id))
