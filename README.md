@@ -28,10 +28,10 @@ Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
    7a1da923-0622-4848-b224-973f1b6c74f0
    ```
    It gives you a UUID of your request - you will use that to check if your roll is ready and what number was drawn
-2. Make request to `info/` or `result/`
+2. Make request to `info/<uuid>/` or `result/<uuid>/`
    `result/` gives you purely the result (response text, code):
    ```bash
-   $ curl https://roll.matih.duckdns.org/api/v1/result/7a1da923-0622-4848-b224-973f1b6c74f0
+   $ curl https://roll.matih.duckdns.org/api/v1/result/7a1da923-0622-4848-b224-973f1b6c74f0/
    6
    ```
     - <NUMBER>, 200 - here is your random number :tada:
@@ -44,9 +44,9 @@ Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
    
    This is useful when making some bash scripts
    
-   `info/` gives you a JSON with more info:
+   `info/<uuid>/` gives you a JSON with more info:
    ```bash
-   $ curl https://roll.matih.duckdns.org/api/v1/info/7a1da923-0622-4848-b224-973f1b6c74f0
+   $ curl https://roll.matih.duckdns.org/api/v1/info/7a1da923-0622-4848-b224-973f1b6c74f0/
    {
      "eta": 0.0,  # Estimated-time-arrival - estimation how may seconds have left for your request to finish
      "queue": 0,  # How many requests are before yours in queue
@@ -55,6 +55,13 @@ Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
    }
    ```
    (`info/` always returns a 200 :eyes:)
+3. If you are curious how your dice looks - you can request the original image with `image/<uuid>/`:
+  ```bash
+  $ curl https://roll.matih.duckdns.org/api/v1/image/7a1da923-0622-4848-b224-973f1b6c74f0/ > image.jpg
+  $ ls
+  image.jpg
+  ```
+  If the request is not finished, it will return same responses as `result/`
 
 
 ### Building
