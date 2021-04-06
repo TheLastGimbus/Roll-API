@@ -5,13 +5,15 @@
 **L**arge
 **L**atency
 
+![API available badge](https://img.shields.io/website?down_color=red&label=API&up_color=green&url=https%3A%2F%2Froll.matih.duckdns.org%2Fapi%2Fv1%2F)
+
 ## The problem
 
 Today's cryptography is based on generating random numbers - or should I say, pseudo-random. Because computers can't
 really do anything "randomly", they generate those numbers by passing them into algorithms back-and-forth.
 
-THIS IS HIGHLY DANGEROUS! If the attacker got knowledge on what algorithm your code uses, they could reverse-guess
-what numbers you generated, and thus, break your encryption!!!
+THIS IS HIGHLY DANGEROUS! If the attacker got knowledge on what algorithm your code uses, they could reverse-guess what
+numbers you generated, and thus, break your encryption!!!
 
 ## Solution
 
@@ -22,7 +24,8 @@ returns the result!
 ## How to use
 
 Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
-1. Make a request to `roll/` - 
+
+1. Make a request to `roll/` -
    ```bash
    $ curl https://roll.matih.duckdns.org/api/v1/roll/`
    7a1da923-0622-4848-b224-973f1b6c74f0
@@ -37,13 +40,13 @@ Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
     - <NUMBER>, 200 - here is your random number :tada:
     - "QUEUED", 202 - your request is waiting in the queue with other requests - it make take some time
     - "RUNNING", 201 - your request is being rolled right now - wait 5 seconds and it will be ready :fire:
-    - "EXPIRED", 410 - your request has been sitting too long, and it's results don't exist anymore :confused: -
-       make a new one :+1:
+    - "EXPIRED", 410 - your request has been sitting too long, and it's results don't exist anymore :confused: - make a
+      new one :+1:
     - "FAILED", 500 - something failed inside the RollER - maybe dice was moving, idk :shrug: - make a new request and
-       it should work :+1:
-   
+      it should work :+1:
+
    This is useful when making some bash scripts
-   
+
    `info/<uuid>/` gives you a JSON with more info:
    ```bash
    $ curl https://roll.matih.duckdns.org/api/v1/info/7a1da923-0622-4848-b224-973f1b6c74f0/
@@ -56,13 +59,14 @@ Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
    ```
    (`info/` always returns a 200 :eyes:)
 3. If you are curious how your dice looks - you can request the original image with `image/<uuid>/`:
+
   ```bash
   $ curl https://roll.matih.duckdns.org/api/v1/image/7a1da923-0622-4848-b224-973f1b6c74f0/ > image.jpg
   $ ls
   image.jpg
   ```
-  If the request is not finished, it will return same responses as `result/`
 
+If the request is not finished, it will return same responses as `result/`
 
 ### Building
 
