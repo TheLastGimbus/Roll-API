@@ -30,7 +30,12 @@ def process_image():
     detector = cv2.SimpleBlobDetector_create(params)
 
     blobs = detector.detect(img)
-    if len(blobs) < 1 or len(blobs) > 6:
-        raise Exception("There is wrong number of dots!")
     kp = cv2.drawKeypoints(img, blobs, np.array([]), (0, 0, 255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    if len(blobs) < 1 or len(blobs) > 6:
+        name = f'failed/{current_job.id}'
+        # Write all images down for analysis in future
+        cv2.imwrite(f'{name}-orig.jpg', cv2.imdecode(np.fromstring(picture_bytes, np.uint8)))
+        cv2.imwrite(f'{name}-resize.jpg', img)
+        cv2.imwrite(f'{name}-points.jpg', kp)
+        raise Exception("There is wrong number of dots!")
     return {'number': len(blobs), 'original_image': picture_bytes, 'kp_image': cv2.imencode('.jpg', kp)[1].tobytes()}
