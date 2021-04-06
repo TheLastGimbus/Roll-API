@@ -5,7 +5,7 @@ import rq
 
 # Places on picture from camera where the dice is (% of width and height for resolution-agnostic)
 scale_x1, scale_x2 = 0.395, 0.555
-scale_y1, scale_y2 = 0.427, 0.697
+scale_y1, scale_y2 = 0.427, 0.650  # Cut off the screw in the cup
 
 conn = redis.Redis()
 queue_images = rq.Queue('images', connection=conn)
