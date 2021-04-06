@@ -38,17 +38,37 @@ def roll():
     return vision_job.id
 
 
-@app.route(API1 + 'image/<uuid:image_id>/')
-def image(image_id):
-    id = str(image_id)
-    job = queue_vision.fetch_job(id)
+def _handle_status(job, finished_func):
     if job is None:
         return "EXPIRED", 410
     elif job.get_status() == "finished":
-        return send_file(io.BytesIO(job.result), mimetype='image/jpeg', attachment_filename=f'{id}.jpg')
+        return finished_func()
     elif job.get_status() == "failed":
         return "Your request was failed - I messed something up, sorry :(", 500
     elif job.get_status() == "started":
         return "RUNNING"
     elif job.get_status() in ["queued", "deferred"]:
         return "QUEUED"
+
+
+@app.route(API1 + 'result/<uuid:job_id>/')
+def result(job_id):
+    job = queue_vision.fetch_job(str(job_id))
+    return _handle_status(
+        job,
+        lambda: str(job.result['number'])
+    )
+
+
+@app.route(API1 + 'image/<uuid:job_id>/')
+def image(job_id):
+    id = str(job_id)
+    job = queue_vision.fetch_job(id)
+    return _handle_status(
+        job,
+        lambda: send_file(
+            io.BytesIO(job.result['original_image']),
+            mimetype='image/jpeg',
+            attachment_filename=f'{id}.jpg'
+        )
+    )
