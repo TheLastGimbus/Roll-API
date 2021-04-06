@@ -42,18 +42,19 @@ def _handle_status(job, finished_func):
     if job is None:
         return "EXPIRED", 410
     elif job.get_status() == "finished":
-        return finished_func()
+        return finished_func(), 200
     elif job.get_status() == "failed":
-        return "Your request was failed - I messed something up, sorry :(", 500
+        return "FAILED", 500
     elif job.get_status() == "started":
-        return "RUNNING"
+        return "RUNNING", 201
     elif job.get_status() in ["queued", "deferred"]:
-        return "QUEUED"
+        return "QUEUED", 202
 
 
 @app.route(API1 + 'info/<uuid:job_id>/')
 def info(job_id):
     job_id = str(job_id)
+    job = queue_vision.fetch_job(job_id)
     r = queue_vision.deferred_job_registry
     all_jobs = r.get_job_ids()
     try:
@@ -61,10 +62,13 @@ def info(job_id):
         left = len(r.get_job_ids(end=index))
     except ValueError:
         left = 0
+    status = _handle_status(job, lambda: "FINISHED")[0]
     return {
+        'status': status,
         'queue': left,
         # IDEA: Some dynamically calculated eta, perhaps if we had multiple workers...
-        'eta': left * 4.56  # 4.56 is average time from my calculations
+        'eta': left * 4.56,  # 4.56 is average time from my calculations
+        'result': None if status != "FINISHED" else job.result['number']
     }
 
 
