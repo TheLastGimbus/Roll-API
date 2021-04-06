@@ -7,11 +7,55 @@
 
 ## The problem
 
-TODO
+Today's cryptography is based on generating random numbers - or should I say, pseudo-random. Because computers can't
+really do anything "randomly", they generate those numbers by passing them into algorithms back-and-forth.
+
+THIS IS HIGHLY DANGEROUS! If the attacker got knowledge on what algorithm your code uses, they could reverse-guess
+what numbers you generated, and thus, break your encryption!!!
 
 ## Solution
 
-TODO
+If we want random numbers to protect us, we need those numbers to be **really** random - here comes Roll-API!
+You make a request, and a special machine rolls a die, takes a picture of it, recognizes how many dots it has, and
+returns the result!
+
+## How to use
+
+Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
+1. Make a request to `roll/` - 
+   ```bash
+   $ curl https://roll.matih.duckdns.org/api/v1/roll/`
+   7a1da923-0622-4848-b224-973f1b6c74f0
+   ```
+   It gives you a UUID of your request - you will use that to check if your roll is ready and what number was drawn
+2. Make request to `info/` or `result/`
+   `result/` gives you purely the result (response text, code):
+   ```bash
+   $ curl https://roll.matih.duckdns.org/api/v1/result/7a1da923-0622-4848-b224-973f1b6c74f0
+   6
+   ```
+    - <NUMBER>, 200 - here is your random number :tada:
+    - "QUEUED", 202 - your request is waiting in the queue with other requests - it make take some time
+    - "RUNNING", 201 - your request is being rolled right now - wait 5 seconds and it will be ready :fire:
+    - "EXPIRED", 410 - your request has been sitting too long, and it's results don't exist anymore :confused: -
+       make a new one :+1:
+    - "FAILED", 500 - something failed inside the RollER - maybe dice was moving, idk :shrug: - make a new request and
+       it should work :+1:
+   
+   This is useful when making some bash scripts
+   
+   `info/` gives you a JSON with more info:
+   ```bash
+   $ curl https://roll.matih.duckdns.org/api/v1/info/7a1da923-0622-4848-b224-973f1b6c74f0
+   {
+     "eta": 0.0,  # Estimated-time-arrival - estimation how may seconds have left for your request to finish
+     "queue": 0,  # How many requests are before yours in queue
+     "result": 6,  # is null when not finished yet
+     "status": "FINISHED"  # Same statuses as with "result/", except it's "FINISHED" instead of a number
+   }
+   ```
+   (`info/` always returns a 200 :eyes:)
+
 
 ### Building
 
