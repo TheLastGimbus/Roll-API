@@ -1,3 +1,4 @@
+import flask_limiter
 import gpiozero
 import io
 import os
@@ -18,6 +19,11 @@ app = Flask(__name__)
 if bool(os.getenv('FLASK_REVERSE_PROXY')):
     # Use this if you're using a reverse-proxy to get real IPs
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
+limiter = flask_limiter.Limiter(
+    app,
+    key_func=flask_limiter.util.get_remote_address,
+    default_limits=["10/second"]
+)
 
 API1 = '/api/v1/'
 
@@ -32,10 +38,17 @@ def hello():
 
 
 @app.route(API1 + 'roll/')
+@limiter.limit("4/minute")
+@limiter.limit("60/hour")
 def roll():
     image_job = queue_images.enqueue(roll_and_take_image)
     vision_job = queue_vision.enqueue(process_image, depends_on=image_job)
     return vision_job.id
+
+
+@app.errorhandler(429)
+def rate_limit_handle(e):
+    return f"Rate limit exceeded :/ try again later: {e}", 429
 
 
 def _handle_status(job, finished_func):
