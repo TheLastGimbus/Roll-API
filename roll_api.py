@@ -11,7 +11,8 @@ from flask import send_file
 from time import sleep
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from tasks.roll_and_take_picture import roll_and_take_picture
+from tasks.process_image import process_image
+from tasks.roll_and_take_image import roll_and_take_image
 
 app = Flask(__name__)
 if bool(os.getenv('FLASK_REVERSE_PROXY')):
@@ -20,7 +21,9 @@ if bool(os.getenv('FLASK_REVERSE_PROXY')):
 
 API1 = '/api/v1/'
 
-queue = rq.Queue(connection=redis.Redis())
+_redis = redis.Redis()
+queue_images = rq.Queue('images', connection=_redis)
+queue_vision = rq.Queue('vision', connection=_redis)
 
 
 @app.route(API1)
@@ -30,15 +33,15 @@ def hello():
 
 @app.route(API1 + 'roll/')
 def roll():
-    job = queue.enqueue(roll_and_take_picture)
-    # TODO: Recognize dice
-    return job.id
+    image_job = queue_images.enqueue(roll_and_take_image)
+    vision_job = queue_vision.enqueue(process_image, depends_on=image_job)
+    return vision_job.id
 
 
 @app.route(API1 + 'image/<uuid:image_id>/')
 def image(image_id):
     id = str(image_id)
-    job = queue.fetch_job(id)
+    job = queue_vision.fetch_job(id)
     if job is None:
         return "EXPIRED", 410
     elif job.get_status() == "finished":
