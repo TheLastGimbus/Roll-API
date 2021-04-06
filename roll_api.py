@@ -61,7 +61,11 @@ def info(job_id):
         left = len(r.get_job_ids(end=index))
     except ValueError:
         left = 0
-    return {'queue': left}
+    return {
+        'queue': left,
+        # IDEA: Some dynamically calculated eta, perhaps if we had multiple workers...
+        'eta': left * 4.56  # 4.56 is average time from my calculations
+    }
 
 
 @app.route(API1 + 'result/<uuid:job_id>/')
