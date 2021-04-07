@@ -21,6 +21,8 @@ If we want random numbers to protect us, we need those numbers to be **really** 
 You make a request, and a special machine rolls a die, takes a picture of it, recognizes how many dots it has, and
 returns the result!
 
+![Roller working](images/roller_working.gif)
+
 ## How to use
 
 Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
