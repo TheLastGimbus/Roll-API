@@ -5,7 +5,7 @@
 **L**arge
 **L**atency
 
-![API available badge](https://img.shields.io/website?down_color=red&label=API&up_color=green&url=https%3A%2F%2Froll.lastgimbus.com%2Fapi%2Fv1%2F)
+![API available badge](https://img.shields.io/website?down_color=red&label=API&up_color=green&url=https%3A%2F%2Froll.lastgimbus.com%2Fapi%2F)
 
 This icon ↑ indicates if API is working right now 
 
