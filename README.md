@@ -5,7 +5,7 @@
 **L**arge
 **L**atency
 
-![API available badge](https://img.shields.io/website?down_color=red&label=API&up_color=green&url=https%3A%2F%2Froll.matih.duckdns.org%2Fapi%2Fv1%2F)
+![API available badge](https://img.shields.io/website?down_color=red&label=API&up_color=green&url=https%3A%2F%2Froll.lastgimbus.com%2Fapi%2Fv1%2F)
 
 This icon ↑ indicates if API is working right now 
 
@@ -27,16 +27,16 @@ returns the result!
 
 ## How to use
 
-Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
+Whole API lives under [https://roll.lastgimbus.com/api/](https://roll.lastgimbus.com/api/)
 
 (If you don't have `curl`, just paste those URLs into the browser)
 
-(NOTE: All uuid's below are purerly example - use your own, that you will get from `roll/`)
+(NOTE: All uuid's below are purely example - use your own, that you will get from `roll/`)
 
-1. Make a request to `roll/`:
+1. Make a request to [`roll/`](https://roll.lastgimbus.com/api/roll/):
 
    ```bash
-   $ curl https://roll.matih.duckdns.org/api/v1/roll/
+   $ curl https://roll.lastgimbus.com/api/roll/
    7a1da923-0622-4848-b224-973f1b6c74f0
    ```
    It gives you a UUID of your request - you will use that to check if your roll is ready and what number was drawn
@@ -44,7 +44,7 @@ Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
 
    - `result/` gives you purely the result - this is useful when making some bash scripts:
       ```bash
-      $ curl https://roll.matih.duckdns.org/api/v1/result/7a1da923-0622-4848-b224-973f1b6c74f0/
+      $ curl https://roll.lastgimbus.com/api/result/7a1da923-0622-4848-b224-973f1b6c74f0/
       6
       ```
       Response text, code:
@@ -58,7 +58,7 @@ Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
 
    - `info/` gives you a JSON with more info:
       ```bash
-      $ curl https://roll.matih.duckdns.org/api/v1/info/7a1da923-0622-4848-b224-973f1b6c74f0/
+      $ curl https://roll.lastgimbus.com/api/info/7a1da923-0622-4848-b224-973f1b6c74f0/
       {
         "eta": 0.0,  # Estimated-time-arrival - estimation how may seconds have left for your request to finish
         "queue": 0,  # How many requests are before yours in queue
@@ -71,7 +71,7 @@ Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
 3. If you are curious how your dice looks - you can request the original image with `image/<uuid>/`:
 
   ```bash
-  $ curl https://roll.matih.duckdns.org/api/v1/image/7a1da923-0622-4848-b224-973f1b6c74f0/ > image.jpg
+  $ curl https://roll.lastgimbus.com/api/image/7a1da923-0622-4848-b224-973f1b6c74f0/ > image.jpg
   $ ls
   image.jpg
   ```

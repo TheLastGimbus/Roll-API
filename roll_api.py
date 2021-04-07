@@ -25,7 +25,7 @@ limiter = flask_limiter.Limiter(
     default_limits=["10/second"]
 )
 
-API1 = '/api/v1/'
+API1 = '/api/'
 
 _redis = redis.Redis()
 queue_images = rq.Queue('images', connection=_redis)
