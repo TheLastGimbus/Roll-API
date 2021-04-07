@@ -27,6 +27,10 @@ returns the result!
 
 Whole API lives under `https://roll.matih.duckdns.org/api/v1/`
 
+(If you don't have `curl`, just paste those URLs into the browser)
+
+(NOTE: All uuid's below are purerly example - use your own, that you will get from `roll/`)
+
 1. Make a request to `roll/`:
 
    ```bash
