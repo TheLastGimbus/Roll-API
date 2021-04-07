@@ -82,10 +82,23 @@ Whole API lives under [https://roll.lastgimbus.com/api/](https://roll.lastgimbus
   image.jpg
   ```
 
-If the request is not finished, it will return same responses as `result/`
+   ![Example full image](images/example-full-image.jpg)
 
-Your results will be available for 5 minutes when finished. After that, you fill get "EXPIRED" messages, and you need
-to make a new request.
+   You can also get image from CV analysis (in grayscale, cropped, and with marked detected dots) -
+   at `anal-image/<uuid>/`:
+
+  ```bash
+  $ curl https://roll.lastgimbus.com/api/anal-image/7a1da923-0622-4848-b224-973f1b6c74f0/ > image.jpg
+  $ ls
+  image.jpg
+  ```
+
+   ![Example anal image](images/example-anal-image.jpg)
+
+   If the request is not finished, it will return same responses as `result/`
+
+Your results will be available for 5 minutes when finished. After that, you fill get "EXPIRED" messages, and you need to
+make a new request.
 
 ### Building
 

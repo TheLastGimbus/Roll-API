@@ -117,3 +117,17 @@ def image(job_id):
             attachment_filename=f'{id}.jpg'
         )
     )
+
+
+@app.route(API1 + 'anal-image/<uuid:job_id>/')
+def anal_image(job_id):
+    id = str(job_id)
+    job = queue_vision.fetch_job(id)
+    return _handle_status(
+        job,
+        lambda: send_file(
+            io.BytesIO(job.result['kp_image']),
+            mimetype='image/jpeg',
+            attachment_filename=f'{id}.jpg'
+        )
+    )
