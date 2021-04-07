@@ -7,6 +7,7 @@ import redis
 import rq
 import subprocess
 import uuid
+from datetime import datetime
 from flask import Flask
 from flask import send_file
 from time import sleep
@@ -41,8 +42,8 @@ def hello():
 @limiter.limit("4/minute")
 @limiter.limit("60/hour")
 def roll():
-    image_job = queue_images.enqueue(roll_and_take_image)
-    vision_job = queue_vision.enqueue(process_image, depends_on=image_job)
+    image_job = queue_images.enqueue(roll_and_take_image, job_timeout='15s', result_ttl='60s')
+    vision_job = queue_vision.enqueue(process_image, depends_on=image_job, job_timeout='2m', result_ttl='5m')
     return vision_job.id
 
 
@@ -67,7 +68,8 @@ def _handle_status(job, finished_func):
 @app.route(API1 + 'info/<uuid:job_id>/')
 def info(job_id):
     job_id = str(job_id)
-    job = queue_vision.fetch_job(job_id)
+    job = queue_vision.fetch_job(job_id)  # Can be None
+    # How many jobs are in queue before you
     r = queue_vision.deferred_job_registry
     all_jobs = r.get_job_ids()
     try:
@@ -75,12 +77,21 @@ def info(job_id):
         left = len(r.get_job_ids(end=index))
     except ValueError:
         left = 0
+    # This will nicely handle None-checking etc and return you the status in string
     status = _handle_status(job, lambda: "FINISHED")[0]
+    # How much time has left for results to be available
+    if status == "FINISHED":
+        ttl = int(job.result_ttl - (datetime.now().timestamp() - job.result['finished_time']))
+    elif status in ["EXPIRED", "FAILED"]:
+        ttl = 0
+    else:
+        ttl = -1
     return {
         'status': status,
         'queue': left,
         # IDEA: Some dynamically calculated eta, perhaps if we had multiple workers...
         'eta': left * 4.56,  # 4.56 is average time from my calculations
+        'ttl': ttl,
         'result': None if status != "FINISHED" else job.result['number']
     }
 
@@ -102,6 +113,20 @@ def image(job_id):
         job,
         lambda: send_file(
             io.BytesIO(job.result['original_image']),
+            mimetype='image/jpeg',
+            attachment_filename=f'{id}.jpg'
+        )
+    )
+
+
+@app.route(API1 + 'anal-image/<uuid:job_id>/')
+def anal_image(job_id):
+    id = str(job_id)
+    job = queue_vision.fetch_job(id)
+    return _handle_status(
+        job,
+        lambda: send_file(
+            io.BytesIO(job.result['kp_image']),
             mimetype='image/jpeg',
             attachment_filename=f'{id}.jpg'
         )
