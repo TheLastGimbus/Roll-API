@@ -1,4 +1,5 @@
 import cv2
+import datetime
 import numpy as np
 import redis
 import rq
@@ -38,4 +39,9 @@ def process_image():
         cv2.imwrite(f'{name}-resize.jpg', img)
         cv2.imwrite(f'{name}-points.jpg', kp)
         raise Exception("There is wrong number of dots!")
-    return {'number': len(blobs), 'original_image': picture_bytes, 'kp_image': cv2.imencode('.jpg', kp)[1].tobytes()}
+    return {
+        'number': len(blobs),
+        'original_image': picture_bytes,
+        'kp_image': cv2.imencode('.jpg', kp)[1].tobytes(),
+        'finished_time': datetime.datetime.now().timestamp(),  # Idk if this is available somewhere in job data
+    }

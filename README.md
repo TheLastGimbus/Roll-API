@@ -60,10 +60,16 @@ Whole API lives under [https://roll.lastgimbus.com/api/](https://roll.lastgimbus
       ```bash
       $ curl https://roll.lastgimbus.com/api/info/7a1da923-0622-4848-b224-973f1b6c74f0/
       {
-        "eta": 0.0,  # Estimated-time-arrival - estimation how may seconds have left for your request to finish
-        "queue": 0,  # How many requests are before yours in queue
-        "result": 6,  # is null when not finished yet
-        "status": "FINISHED"  # Same statuses as with "result/", except it's "FINISHED" instead of a number
+        # Estimated-time-arrival - estimation how may seconds have left for your request to finish
+        "eta": 0.0,  
+        # How many requests are before yours in queue
+        "queue": 0,  
+        # Your result - is null when not finished yet or expired
+        "result": 6,  
+        # Same statuses as with "result/", except it's "FINISHED" instead of a number
+        "status": "FINISHED",  
+        # How many seconds have left before results expire - "-1" when waiting in queue, "0" when expired or failed
+        "ttl": 300
       }
       ```
       (`info/` always returns a 200 :eyes:)
@@ -77,6 +83,9 @@ Whole API lives under [https://roll.lastgimbus.com/api/](https://roll.lastgimbus
   ```
 
 If the request is not finished, it will return same responses as `result/`
+
+Your results will be available for 5 minutes when finished. After that, you fill get "EXPIRED" messages, and you need
+to make a new request.
 
 ### Building
 
