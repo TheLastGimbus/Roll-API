@@ -7,6 +7,8 @@
 
 ![API available badge](https://img.shields.io/website?down_color=red&label=API&up_color=green&url=https%3A%2F%2Froll.matih.duckdns.org%2Fapi%2Fv1%2F)
 
+This icon ↑ indicates if API is working right now 
+
 ## The problem
 
 Today's cryptography is based on generating random numbers - or should I say, pseudo-random. Because computers can't
