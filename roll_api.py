@@ -131,3 +131,19 @@ def anal_image(job_id):
             attachment_filename=f'{id}.jpg'
         )
     )
+
+
+if __name__ == '__main__':
+    if bool(os.getenv('ROLL_PRODUCTION')):
+        print('Production mode...')
+        # This requires to "pip install bjoern"
+        # However, I didn't add it to requirements.txt, because it broke without "apt install libev-dev"
+        import bjoern
+
+        print('Running bjoern server')
+        bjoern.run(app, "0.0.0.0", 5000)
+    else:
+        print('Dev mode...')
+        os.environ['FLASK_ENV'] = 'development'
+        print('Running flask dev server')
+        app.run(host='0.0.0.0', port=5000, debug=True)

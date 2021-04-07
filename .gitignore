@@ -10,4 +10,4 @@ venv/
 instance/
 .webassets-cache
 
-full_images/
+.env_prod
