@@ -1,3 +1,4 @@
+import flask_cors
 import flask_limiter
 import gpiozero
 import io
@@ -17,6 +18,7 @@ from tasks.process_image import process_image
 from tasks.roll_and_take_image import roll_and_take_image
 
 app = Flask(__name__)
+flask_cors.CORS(app)
 if bool(os.getenv('FLASK_REVERSE_PROXY')):
     # Use this if you're using a reverse-proxy to get real IPs
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
