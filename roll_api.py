@@ -25,7 +25,8 @@ if bool(os.getenv('FLASK_REVERSE_PROXY')):
 limiter = flask_limiter.Limiter(
     app,
     key_func=flask_limiter.util.get_remote_address,
-    default_limits=["10/second"]
+    default_limits=["10/second"],
+    headers_enabled=True,
 )
 
 API1 = '/api/'
