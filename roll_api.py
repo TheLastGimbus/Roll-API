@@ -8,7 +8,7 @@ import redis
 import rq
 import subprocess
 import uuid
-from datetime import datetime
+import datetime
 from flask import Flask
 from flask import send_file
 from time import sleep
@@ -84,16 +84,17 @@ def info(job_id):
     status = _handle_status(job, lambda: "FINISHED")[0]
     # How much time has left for results to be available
     if status == "FINISHED":
-        ttl = int(job.result_ttl - (datetime.now().timestamp() - job.result['finished_time']))
+        ttl = job.result['finished_time'] + job.result_ttl
     elif status in ["EXPIRED", "FAILED"]:
-        ttl = 0
+        ttl = 0.0
     else:
-        ttl = -1
+        ttl = -1.0
     return {
         'status': status,
         'queue': left,
         # IDEA: Some dynamically calculated eta, perhaps if we had multiple workers...
-        'eta': left * 4.56,  # 4.56 is average time from my calculations
+        # 4.56 is average time from my calculations
+        'eta': (datetime.datetime.now() + datetime.timedelta(seconds=left * 4.56)).timestamp(),
         'ttl': ttl,
         'result': None if status != "FINISHED" else job.result['number']
     }
