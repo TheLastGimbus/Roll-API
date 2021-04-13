@@ -72,7 +72,7 @@ def roll():
 def rate_limit_handle(e):
     return f"Rate limit exceeded :/ " + \
            ("API under heavy load 0_0 " if queue_vision.deferred_job_registry.count > 30 else '') + \
-           "try again later: {e}", 429
+           f"try again later: {e}", 429
 
 
 def _handle_status(job, finished_func):
