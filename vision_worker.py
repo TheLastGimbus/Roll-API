@@ -6,4 +6,4 @@ import sys
 with rq.Connection():
     qs = sys.argv[1:] or ['vision']
     w = rq.Worker(qs)
-    w.work()
+    w.work(with_scheduler=True)
