@@ -1,3 +1,4 @@
+import datetime
 import flask_cors
 import flask_limiter
 import gpiozero
@@ -8,8 +9,8 @@ import redis
 import rq
 import subprocess
 import uuid
-import datetime
 from flask import Flask
+from flask import request
 from flask import send_file
 from time import sleep
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -28,6 +29,13 @@ limiter = flask_limiter.Limiter(
     default_limits=["10/second"],
     headers_enabled=True,
 )
+# Premium users who can spam as much as they want
+# That is - me :)
+premium_passwords = []
+_p_pass_file = pathlib.Path('premium_passwords.txt')
+if _p_pass_file.exists():
+    with open(_p_pass_file, 'r') as f:
+        premium_passwords = f.read().split('\n')
 
 API1 = '/api/'
 
@@ -39,6 +47,11 @@ queue_vision = rq.Queue('vision', connection=_redis)
 @app.route(API1)
 def hello():
     return "Hello there!"
+
+
+@limiter.request_filter
+def password_whitelist():
+    return request.args.get('pwd') in premium_passwords
 
 
 @app.route(API1 + 'roll/')

@@ -11,3 +11,4 @@ instance/
 .webassets-cache
 
 .env_prod
+premium_passwords.txt
