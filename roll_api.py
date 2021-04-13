@@ -35,7 +35,7 @@ premium_passwords = []
 _p_pass_file = pathlib.Path('premium_passwords.txt')
 if _p_pass_file.exists():
     with open(_p_pass_file, 'r') as f:
-        premium_passwords = f.read().split('\n')
+        premium_passwords = f.read().split()
 
 API1 = '/api/'
 
