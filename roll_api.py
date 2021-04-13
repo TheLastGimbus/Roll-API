@@ -54,9 +54,13 @@ def password_whitelist():
     return request.headers.get('pwd') in premium_passwords
 
 
+def _roll_rate_limit():
+    c = queue_vision.deferred_job_registry.count
+    return ('4/minute' if c > 3 else '8/minute') + ';' + ('60/hour' if c > 6 else '120/hour')
+
+
 @app.route(API1 + 'roll/')
-@limiter.limit("4/minute")
-@limiter.limit("60/hour")
+@limiter.limit(_roll_rate_limit())
 def roll():
     image_job = queue_images.enqueue(roll_and_take_image, job_timeout='15s', result_ttl='60s')
     vision_job = queue_vision.enqueue(process_image, depends_on=image_job, job_timeout='2m', result_ttl='5m')
