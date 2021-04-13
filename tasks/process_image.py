@@ -35,9 +35,8 @@ def process_image():
     if len(blobs) < 1 or len(blobs) > 6:
         name = f'failed/{current_job.id}'
         # Write all images down for analysis in future
-        cv2.imwrite(f'{name}-orig.jpg', cv2.imdecode(np.fromstring(picture_bytes, np.uint8)))
-        cv2.imwrite(f'{name}-resize.jpg', img)
-        cv2.imwrite(f'{name}-points.jpg', kp)
+        cv2.imwrite(f'{name}-orig.jpg', cv2.imdecode(np.fromstring(picture_bytes, np.uint8), cv2.IMREAD_COLOR))
+        cv2.imwrite(f'{name}-anal.jpg', kp)
         raise Exception("There is wrong number of dots!")
     return {
         'number': len(blobs),

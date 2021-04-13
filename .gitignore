@@ -10,5 +10,6 @@ venv/
 instance/
 .webassets-cache
 
+failed/
 .env_prod
 premium_passwords.txt
