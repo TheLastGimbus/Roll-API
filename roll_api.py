@@ -56,20 +56,23 @@ def password_whitelist():
 
 def _roll_rate_limit():
     c = queue_vision.deferred_job_registry.count
-    return ('4/minute' if c > 3 else '8/minute') + ';' + ('60/hour' if c > 6 else '120/hour')
+    return ('8/minute' if c < 4 else ('4/minute' if c < 30 else '1/minute')) + ';' + \
+           ('120/hour' if c < 8 else ('60/hour' if c < 30 else '30/hour'))
 
 
 @app.route(API1 + 'roll/')
 @limiter.limit(_roll_rate_limit())
 def roll():
-    image_job = queue_images.enqueue(roll_and_take_image, job_timeout='15s', result_ttl='60s')
-    vision_job = queue_vision.enqueue(process_image, depends_on=image_job, job_timeout='2m', result_ttl='5m')
+    image_job = queue_images.enqueue(roll_and_take_image, job_timeout='15s', result_ttl='60s', ttl='5h')
+    vision_job = queue_vision.enqueue(process_image, depends_on=image_job, job_timeout='2m', result_ttl='5m', ttl='5h')
     return vision_job.id
 
 
 @app.errorhandler(429)
 def rate_limit_handle(e):
-    return f"Rate limit exceeded :/ try again later: {e}", 429
+    return f"Rate limit exceeded :/ " + \
+           ("API under heavy load 0_0 " if queue_vision.deferred_job_registry.count > 30 else '') + \
+           "try again later: {e}", 429
 
 
 def _handle_status(job, finished_func):
