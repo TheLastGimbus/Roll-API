@@ -51,7 +51,7 @@ def hello():
 
 @limiter.request_filter
 def password_whitelist():
-    return request.args.get('pwd') in premium_passwords
+    return request.headers.get('pwd') in premium_passwords
 
 
 @app.route(API1 + 'roll/')
