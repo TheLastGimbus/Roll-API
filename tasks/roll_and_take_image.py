@@ -1,3 +1,8 @@
+"""
+Roll the dice and take image
+This is for possible future change - using picamera library is kinda problematic (keeping camera open while running
+Flask crashes :/ ) - perhaps I will use some plain USB camera in the future
+"""
 import gpiozero
 import io
 import subprocess
@@ -13,7 +18,7 @@ def roll_and_take_image():
     sleep(0.5)
     s.value = 0.9
     sleep(0.5)
-    s.close()  # Close it so it doesn't rattle in there
+    s.close()  # Close it so it doesn't rattle in there - this is also the problem with the camera interfering :/
 
     led.on()
     with io.BytesIO() as stream:
