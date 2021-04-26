@@ -1,3 +1,10 @@
+"""
+The main API app - it takes requests, validates them (for example, from spamming too much), schedules jobs to RQ,
+and displays the data from RQ
+
+It is NOT intended to handle the actual task of "rolling the dice and taking a photo" - this is done by RQ workers
+All endpoints here should just talk to Redis, and respond as quick as possible
+"""
 import datetime
 import flask_cors
 import flask_limiter
@@ -19,15 +26,16 @@ from tasks.process_image import process_image
 from tasks.roll_and_take_image import roll_and_take_image
 
 app = Flask(__name__)
-flask_cors.CORS(app)
+flask_cors.CORS(app)  # This lets us access the API from different domains/websites
+# If you are running behind a reverse-proxy like Caddy/Nginx, set this to true, to get *real* client's addresses
 if bool(os.getenv('FLASK_REVERSE_PROXY')):
-    # Use this if you're using a reverse-proxy to get real IPs
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
+# Rate limiter to prevent spam/overloading stuff
 limiter = flask_limiter.Limiter(
     app,
     key_func=flask_limiter.util.get_remote_address,
     default_limits=["10/second"],
-    headers_enabled=True,
+    headers_enabled=True,  # Send headers with info about how much time has left until unlocking
 )
 # Premium users who can spam as much as they want
 # That is - me :)
@@ -37,6 +45,7 @@ if _p_pass_file.exists():
     with open(_p_pass_file, 'r') as f:
         premium_passwords = f.read().split()
 
+# Main API endpoint - change this if anything big changes, or features/endpoints are removed
 API1 = '/api/'
 
 _redis = redis.Redis()
@@ -44,7 +53,7 @@ queue_images = rq.Queue('images', connection=_redis)
 queue_vision = rq.Queue('vision', connection=_redis)
 
 
-@app.route(API1)
+@app.route(API1)  # TODO: Maybe add some documentation there
 def hello():
     return "Hello there!"
 
@@ -55,6 +64,10 @@ def password_whitelist():
 
 
 def _roll_rate_limit():
+    """A helper function that if-else-es what rate limit to set right now
+    It is made so that in no-traffic, people get pretty much unlimited fun,
+    and in heavy-traffic you get heavy limits so that other people can *at least get one*
+    """
     c = queue_vision.deferred_job_registry.count
     return ('8/minute' if c < 4 else ('4/minute' if c < 30 else '1/minute')) + ';' + \
            ('120/hour' if c < 8 else ('60/hour' if c < 30 else '30/hour'))
@@ -76,6 +89,7 @@ def rate_limit_handle(e):
 
 
 def _handle_status(job, finished_func):
+    """A helper switch-case to handle statuses from RQ"""
     if job is None:
         return "EXPIRED", 410
     elif job.get_status() == "finished":
@@ -90,6 +104,7 @@ def _handle_status(job, finished_func):
 
 @app.route(API1 + 'info/<uuid:job_id>/')
 def info(job_id):
+    """Gives you detailed info about your roll - always returns 200 unlike /result/"""
     job_id = str(job_id)
     job = queue_vision.fetch_job(job_id)  # Can be None
     # How many jobs are in queue before you
