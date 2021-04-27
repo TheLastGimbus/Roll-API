@@ -12,7 +12,7 @@ around, and from outside light
 I glued the Raspberry Pi Zero W at the top, together with a camera
 
 For "the thing where the dice will roll inside", I got myself a white paper cup, so it's a nice **clean** background.
-I was heavily inspired by [Mark Fickett's project](http://www.markfickett.com/stuff/artPage.php?id=389) - he actually
+I was heavily inspired by @markfickett's [D20 Roll Fairness project](http://www.markfickett.com/stuff/artPage.php?id=389) - he actually
 did *much more* complicated things, you can check it out!
 
 **Inside** the cup, I've put 2 LEDs that will illuminate the dice when pictures are taken. 
