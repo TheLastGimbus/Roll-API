@@ -33,10 +33,6 @@ so I had to use the servo's screw :hammer:
 
 That's it! The simpler it is, the more robust it will be :ok_hand:
 
-### The old version
-
-My first try at this looked something like this, if you are interested
-
 ## Backend :computer:
 
 Current Roll-API backend that runs everything together looks like this:
