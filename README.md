@@ -108,3 +108,8 @@ make a new request.
 ## How to make it yourself :mechanic: !
 
 If you want details about how I built it - and how you can do it too - look at [DIY.md](DIY.md)
+
+## Honorable mentions
+
+ - My friend @am_mooncake made this sweet purple-ish icon - you can check his other graphics out: 
+   [Instagram](https://dribbble.com/am_mooncake), [Dribble](https://instagram.com/am_mooncake)
