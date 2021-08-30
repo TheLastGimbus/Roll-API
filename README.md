@@ -113,3 +113,4 @@ If you want details about how I built it - and how you can do it too - look at [
 
  - My friend @am_mooncake made this sweet purple-ish icon - you can check his other graphics out: 
    [Instagram](https://dribbble.com/am_mooncake), [Dribble](https://instagram.com/am_mooncake)
+ - The RollER machine was heavily inspired by @markfickett's [D20 Roll Fairness project](http://www.markfickett.com/stuff/artPage.php?id=389)
