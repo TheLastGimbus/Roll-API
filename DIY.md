@@ -33,6 +33,14 @@ so I had to use the servo's screw :hammer:
 
 That's it! The simpler it is, the more robust it will be :ok_hand:
 
+### Pinout
+The default pinout goes like this:
+- Servo VCC: 5V (pin 4)
+- Servo GND: GND (pin 6)
+- Servo signal: GPIO14 (pin8)
+- LED light VCC: GPIO4 (pin 7)
+- LED light GND: GND (pin 9)
+
 ## Backend :computer:
 
 Current Roll-API backend that runs everything together looks like this:
@@ -52,7 +60,7 @@ and super clean background, I can just use OpenCV's `cv2.SimpleBlobDetector` - i
 ### Installation :cd:
 
 Currently, there are no fancy Docker containers, or even pip venv - if you want to be super clean and isolate
-everything, you can, but since I'm running this on a single Raspberry Pi Zero W, that can't take anything more anyway, 
+everything, you can, but since I'm running this on a single Raspberry Pi Zero W (that can't take anything more anyway) 
 I just install everything globally
 
 0. Get yourself a Raspberry Pi with a camera, and install RpiOS on it - can be Light version - as
