@@ -84,6 +84,8 @@ I put all environment variables in `.env_prod` file:
 ROLL_PRODUCTION=1
 FLASK_REVERSE_PROXY=1
 ```
+// If you want to use `ROLL_PRODUCTION` flag, you need to install `bjoern` (or use other WSGI) - `sudo apt install libev-dev && pip3 install bjoern`
+
 ...and tell all of them to use it. Here are my config files:
 
 `roll-api.service`
