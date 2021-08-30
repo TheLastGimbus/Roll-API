@@ -24,14 +24,14 @@ special box, then takes a picture of it :camera:, analyzes how many dots it has 
 
 ## How to use :monocle_face:
 
-For normies, there is a nice web-app :iphone: written in Flutter - [https://roll.lastgimbus.com/play/](https://roll.lastgimbus.com/play/) -
+For normies, there is a nice web-app :iphone: written in Flutter - https://the.lastgimbus.com/rollplay -
 you can use it on your phone, for example, when playing board games when you can't find a dice :+1:
 
-For terminal people there is a CLI :keyboard: written in Dart - [https://github.com/TheLastGimbus/rollapi_dart#cli](https://github.com/TheLastGimbus/rollapi_dart#cli)
+For terminal people there is a CLI :keyboard: written in Dart - https://github.com/TheLastGimbus/rollapi_dart#cli
 
 ### Using the API itself in your code:
 
-Whole API lives under [https://roll.lastgimbus.com/api/](https://roll.lastgimbus.com/api/)
+Whole API lives under https://roll.lastgimbus.com/api/
 
 (NOTE: All uuid's below are purely example - use your own, that you will get from `roll/`)
 
