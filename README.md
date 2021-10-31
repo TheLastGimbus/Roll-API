@@ -24,7 +24,7 @@ special box, then takes a picture of it :camera:, analyzes how many dots it has 
 
 ## How to use :monocle_face:
 
-For normies, there is a nice web-app :iphone: written in Flutter - https://the.lastgimbus.com/rollplay -
+For normies, there is a nice web-app :iphone: written in Flutter - https://the.lastgimbus.com/rollplay/ -
 you can use it on your phone, for example, when playing board games when you can't find a dice :+1:
 
 For terminal people there is a CLI :keyboard: written in Dart - https://github.com/TheLastGimbus/rollapi_dart#cli
