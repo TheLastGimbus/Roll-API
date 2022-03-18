@@ -8,6 +8,7 @@ All endpoints here should just talk to Redis, and respond as quick as possible
 import datetime
 import flask_cors
 import flask_limiter
+import flask_limiter.util
 import gpiozero
 import io
 import os
@@ -26,7 +27,7 @@ from tasks.process_image import process_image
 from tasks.roll_and_take_image import roll_and_take_image
 
 app = Flask(__name__)
-flask_cors.CORS(app)  # This lets us access the API from different domains/websites
+flask_cors.CORS(app, expose_headers=['*'])  # This lets us access the API from different domains/websites
 # If you are running behind a reverse-proxy like Caddy/Nginx, set this to true, to get *real* client's addresses
 if bool(os.getenv('FLASK_REVERSE_PROXY')):
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
