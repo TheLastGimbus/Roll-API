@@ -160,14 +160,17 @@ def result(job_id):
 def image(job_id):
     id = str(job_id)
     job = queue_vision.fetch_job(id)
-    return _handle_status(
-        job,
-        lambda: send_file(
+
+    def _send_img():
+        _f = send_file(
             io.BytesIO(job.result['original_image']),
             mimetype='image/jpeg',
-            attachment_filename=f'{id}.jpg'
+            attachment_filename=f'{id}.jpg',
         )
-    )
+        _f.headers.set('Cache-Control', 'max-age=31536000, private')
+        return _f
+
+    return _handle_status(job, _send_img)
 
 
 @app.route(API1 + 'anal-image/<uuid:job_id>/')
