@@ -81,7 +81,7 @@ def _result_ttl():
     but if there are, it will start to get much more strict
     """
     c = queue_vision.finished_job_registry.count
-    return '24h' if c < 30 else ('3h' if c < 100 else ('30m' if c < 200 else '5m'))
+    return '72h' if c < 150 else ('6h' if c < 250 else ('30m' if c < 500 else '5m'))
 
 
 @app.route(API1 + 'roll/')
