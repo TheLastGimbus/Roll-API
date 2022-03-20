@@ -75,11 +75,21 @@ def _roll_rate_limit():
            ('120/hour' if c < 8 else ('60/hour' if c < 30 else '30/hour'))
 
 
+def _result_ttl():
+    """A helper function that if-else-es what result TTL to set right now
+    It's made so that if there aren't a lot of results in db, it will be very very long (maybe even few hours),
+    but if there are, it will start to get much more strict
+    """
+    c = queue_vision.finished_job_registry.count
+    return '24h' if c < 30 else ('3h' if c < 100 else ('30m' if c < 200 else '5m'))
+
+
 @app.route(API1 + 'roll/')
 @limiter.limit(_roll_rate_limit())
 def roll():
-    image_job = queue_images.enqueue(roll_and_take_image, job_timeout='15s', result_ttl='60s', ttl='5h')
-    vision_job = queue_vision.enqueue(process_image, depends_on=image_job, job_timeout='2m', result_ttl='5m', ttl='5h')
+    image_job = queue_images.enqueue(roll_and_take_image, job_timeout='15s', result_ttl='90s', ttl='5h')
+    vision_job = queue_vision.enqueue(
+        process_image, depends_on=image_job, job_timeout='1m', result_ttl=_result_ttl(), ttl='5h')
     return vision_job.id
 
 
