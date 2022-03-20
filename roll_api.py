@@ -166,6 +166,7 @@ def image(job_id):
             io.BytesIO(job.result['original_image']),
             mimetype='image/jpeg',
             attachment_filename=f'{id}.jpg',
+            max_age=31536000,
         )
         _f.headers.set('Cache-Control', 'max-age=31536000, private')
         return _f
