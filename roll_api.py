@@ -166,11 +166,11 @@ def image(job_id):
             io.BytesIO(job.result['original_image']),
             mimetype='image/jpeg',
             attachment_filename=f'{id}.jpg',
+            etag=f"{job.id}@{int(job.ended_at.timestamp())}",
             last_modified=job.ended_at,
             max_age=31536000,
         )
-        _f.make_conditional(request)
-        # _f.headers.set('Cache-Control', 'max-age=31536000, private')
+        _f.headers.set('Cache-Control', 'max-age=31536000, private')
         return _f
 
     return _handle_status(job, _send_img)
