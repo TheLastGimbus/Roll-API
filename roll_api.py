@@ -169,6 +169,7 @@ def image(job_id):
             last_modified=job.ended_at,
             max_age=31536000,
         )
+        _f.make_conditional(request)
         # _f.headers.set('Cache-Control', 'max-age=31536000, private')
         return _f
 
