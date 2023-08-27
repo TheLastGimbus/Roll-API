@@ -165,7 +165,10 @@ def image(job_id):
         lambda: send_file(
             io.BytesIO(job.return_value()['original_image']),
             mimetype='image/jpeg',
-            download_name=f'{id}.jpg'
+            download_name=f'{id}.jpg',
+            etag=job.id,
+            last_modified=job.ended_at,
+            max_age=31536000,
         )
     )
 
@@ -179,7 +182,10 @@ def anal_image(job_id):
         lambda: send_file(
             io.BytesIO(job.return_value()['kp_image']),
             mimetype='image/jpeg',
-            download_name=f'{id}.jpg'
+            download_name=f'{id}.jpg',
+            etag=job.id,
+            last_modified=job.ended_at,
+            max_age=31536000,
         )
     )
 
