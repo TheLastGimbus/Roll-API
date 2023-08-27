@@ -34,7 +34,7 @@ if bool(os.getenv('FLASK_REVERSE_PROXY')):
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
 # Rate limiter to prevent spam/overloading stuff
 limiter = flask_limiter.Limiter(
-    app,
+    app=app,
     key_func=flask_limiter.util.get_remote_address,
     default_limits=["10/second"],
     headers_enabled=True,  # Send headers with info about how much time has left until unlocking
@@ -75,11 +75,21 @@ def _roll_rate_limit():
            ('120/hour' if c < 8 else ('60/hour' if c < 30 else '30/hour'))
 
 
+def _result_ttl():
+    """A helper function that if-else-es what result TTL to set right now
+    It's made so that if there aren't a lot of results in db, it will be very very long (maybe even few hours),
+    but if there are, it will start to get much more strict
+    """
+    c = queue_vision.finished_job_registry.count
+    return '72h' if c < 150 else ('6h' if c < 250 else ('30m' if c < 500 else '5m'))
+
+
 @app.route(API1 + 'roll/')
 @limiter.limit(_roll_rate_limit())
 def roll():
-    image_job = queue_images.enqueue(roll_and_take_image, job_timeout='15s', result_ttl='60s', ttl='5h')
-    vision_job = queue_vision.enqueue(process_image, depends_on=image_job, job_timeout='2m', result_ttl='5m', ttl='5h')
+    image_job = queue_images.enqueue(roll_and_take_image, job_timeout='15s', result_ttl='90s', ttl='5h')
+    vision_job = queue_vision.enqueue(
+        process_image, depends_on=image_job, job_timeout='1m', result_ttl=_result_ttl(), ttl='5h')
     return vision_job.id
 
 
@@ -121,7 +131,7 @@ def info(job_id):
     status = _handle_status(job, lambda: "FINISHED")[0]
     # How much time has left for results to be available
     if status == "FINISHED":
-        ttl = job.result['finished_time'] + job.result_ttl
+        ttl = job.return_value()['finished_time'] + job.result_ttl
     elif status in ["EXPIRED", "FAILED"]:
         ttl = 0.0
     else:
@@ -133,7 +143,7 @@ def info(job_id):
         # 4.56 is average time from my calculations
         'eta': (datetime.datetime.now() + datetime.timedelta(seconds=left * 4.56)).timestamp(),
         'ttl': ttl,
-        'result': None if status != "FINISHED" else job.result['number']
+        'result': None if status != "FINISHED" else job.return_value()['number']
     }
 
 
@@ -142,7 +152,7 @@ def result(job_id):
     job = queue_vision.fetch_job(str(job_id))
     return _handle_status(
         job,
-        lambda: str(job.result['number'])
+        lambda: str(job.return_value()['number'])
     )
 
 
@@ -153,9 +163,12 @@ def image(job_id):
     return _handle_status(
         job,
         lambda: send_file(
-            io.BytesIO(job.result['original_image']),
+            io.BytesIO(job.return_value()['original_image']),
             mimetype='image/jpeg',
-            attachment_filename=f'{id}.jpg'
+            download_name=f'{id}.jpg',
+            etag=job.id,
+            last_modified=job.ended_at,
+            max_age=31536000,
         )
     )
 
@@ -167,9 +180,12 @@ def anal_image(job_id):
     return _handle_status(
         job,
         lambda: send_file(
-            io.BytesIO(job.result['kp_image']),
+            io.BytesIO(job.return_value()['kp_image']),
             mimetype='image/jpeg',
-            attachment_filename=f'{id}.jpg'
+            download_name=f'{id}.jpg',
+            etag=job.id,
+            last_modified=job.ended_at,
+            max_age=31536000,
         )
     )
 
