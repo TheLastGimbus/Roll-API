@@ -7,9 +7,13 @@
 **L**arge
 **L**atency
 
-![API available badge](https://img.shields.io/website?down_color=red&label=API&up_color=green&url=https%3A%2F%2Froll.lastgimbus.com%2Fapi%2F)
+This shield 👇 indicates if API is working today:
 
-This shield ↑ indicates if API is working *right now* 
+[![Statuscake uptime monitoring](https://app.statuscake.com/button/index.php?Track=9PYTnpRJp8&Days=1&Design=2)](https://www.statuscake.com)
+
+Last 30 days:
+
+[![Statuscake uptime monitoring](https://app.statuscake.com/button/index.php?Track=9PYTnpRJp8&Days=30&Design=2)](https://www.statuscake.com)
 
 ## What is this?
 
