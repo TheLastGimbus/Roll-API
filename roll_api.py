@@ -131,7 +131,7 @@ def info(job_id):
     status = _handle_status(job, lambda: "FINISHED")[0]
     # How much time has left for results to be available
     if status == "FINISHED":
-        ttl = job.result['finished_time'] + job.result_ttl
+        ttl = job.return_value()['finished_time'] + job.result_ttl
     elif status in ["EXPIRED", "FAILED"]:
         ttl = 0.0
     else:
@@ -143,7 +143,7 @@ def info(job_id):
         # 4.56 is average time from my calculations
         'eta': (datetime.datetime.now() + datetime.timedelta(seconds=left * 4.56)).timestamp(),
         'ttl': ttl,
-        'result': None if status != "FINISHED" else job.result['number']
+        'result': None if status != "FINISHED" else job.return_value()['number']
     }
 
 
@@ -152,7 +152,7 @@ def result(job_id):
     job = queue_vision.fetch_job(str(job_id))
     return _handle_status(
         job,
-        lambda: str(job.result['number'])
+        lambda: str(job.return_value()['number'])
     )
 
 
@@ -163,9 +163,9 @@ def image(job_id):
     return _handle_status(
         job,
         lambda: send_file(
-            io.BytesIO(job.result['original_image']),
+            io.BytesIO(job.return_value()['original_image']),
             mimetype='image/jpeg',
-            attachment_filename=f'{id}.jpg'
+            download_name=f'{id}.jpg'
         )
     )
 
@@ -177,9 +177,9 @@ def anal_image(job_id):
     return _handle_status(
         job,
         lambda: send_file(
-            io.BytesIO(job.result['kp_image']),
+            io.BytesIO(job.return_value()['kp_image']),
             mimetype='image/jpeg',
-            attachment_filename=f'{id}.jpg'
+            download_name=f'{id}.jpg'
         )
     )
 
