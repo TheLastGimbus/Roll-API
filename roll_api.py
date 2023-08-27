@@ -34,7 +34,7 @@ if bool(os.getenv('FLASK_REVERSE_PROXY')):
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
 # Rate limiter to prevent spam/overloading stuff
 limiter = flask_limiter.Limiter(
-    app,
+    app=app,
     key_func=flask_limiter.util.get_remote_address,
     default_limits=["10/second"],
     headers_enabled=True,  # Send headers with info about how much time has left until unlocking
