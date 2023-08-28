@@ -49,7 +49,7 @@ def process_image():
         raise Exception("There is wrong number of dots!")
     return {
         'number': len(blobs),
-        'original_image': picture_bytes,
-        'kp_image': cv2.imencode('.jpg', kp)[1].tobytes(),  # Image with anal data
+        'original_image': cv2.imencode('.webp', img, [cv2.IMWRITE_WEBP_QUALITY, 90])[1].tobytes(),
+        'kp_image': cv2.imencode('.webp', kp, [cv2.IMWRITE_WEBP_QUALITY, 90])[1].tobytes(),  # Image with anal data
         'finished_time': datetime.datetime.now().timestamp(),  # Idk if this is available somewhere in job data
     }
