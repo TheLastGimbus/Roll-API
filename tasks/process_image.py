@@ -25,7 +25,7 @@ def process_image():
     # Get parent job to get it's output image
     current_job = rq.get_current_job(conn)
     image_job_id = current_job.dependency.id
-    picture_bytes = queue_images.fetch_job(image_job_id).result
+    picture_bytes = queue_images.fetch_job(image_job_id).return_value()
 
     img = cv2.imdecode(np.fromstring(picture_bytes, np.uint8), cv2.IMREAD_GRAYSCALE)
     h, w = img.shape
