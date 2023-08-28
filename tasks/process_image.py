@@ -27,7 +27,8 @@ def process_image():
     image_job_id = current_job.dependency.id
     picture_bytes = queue_images.fetch_job(image_job_id).return_value()
 
-    img = cv2.imdecode(np.fromstring(picture_bytes, np.uint8), cv2.IMREAD_GRAYSCALE)
+    original_img = cv2.imdecode(np.fromstring(picture_bytes, np.uint8))
+    img = cv2.cvtColor(original_img, cv2.COLOR_BGR2GRAY)
     h, w = img.shape
     x1, x2 = int(w * scale_x1), int(w * scale_x2)
     y1, y2 = int(h * scale_y1), int(h * scale_y2)
@@ -49,7 +50,7 @@ def process_image():
         raise Exception("There is wrong number of dots!")
     return {
         'number': len(blobs),
-        'original_image': cv2.imencode('.webp', picture_bytes, [cv2.IMWRITE_WEBP_QUALITY, 90])[1].tobytes(),
+        'original_image': cv2.imencode('.webp', original_img, [cv2.IMWRITE_WEBP_QUALITY, 90])[1].tobytes(),
         'kp_image': cv2.imencode('.webp', kp, [cv2.IMWRITE_WEBP_QUALITY, 90])[1].tobytes(),  # Image with anal data
         'finished_time': datetime.datetime.now().timestamp(),  # Idk if this is available somewhere in job data
     }
