@@ -27,7 +27,7 @@ def process_image():
     image_job_id = current_job.dependency.id
     picture_bytes = queue_images.fetch_job(image_job_id).return_value()
 
-    original_img = cv2.imdecode(np.fromstring(picture_bytes, np.uint8))
+    original_img = cv2.imdecode(np.fromstring(picture_bytes, np.uint8), cv2.IMREAD_COLOR)
     img = cv2.cvtColor(original_img, cv2.COLOR_BGR2GRAY)
     h, w = img.shape
     x1, x2 = int(w * scale_x1), int(w * scale_x2)
