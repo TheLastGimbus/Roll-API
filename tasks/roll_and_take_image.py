@@ -22,9 +22,11 @@ def roll_and_take_image():
 
     led.on()
     with io.BytesIO() as stream:
-        with Picamera2() as camera:
-            camera.configure(camera.create_still_configuration(main={"size": (720, 480)}))
-            camera.capture_file(stream, format='jpeg')
+        camera = Picamera2()
+        camera.configure(camera.create_still_configuration(main={"size": (720, 480)}))
+        camera.start()
+        camera.capture_file(stream, format='jpeg')
+        camera.close()
         bytes = stream.getvalue()
     led.off()
     return bytes
