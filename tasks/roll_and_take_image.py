@@ -6,7 +6,7 @@ Flask crashes :/ ) - perhaps I will use some plain USB camera in the future
 import gpiozero
 import io
 import subprocess
-from picamera import PiCamera
+from picamera2 import Picamera2
 from time import sleep
 
 led = gpiozero.LED(4)
@@ -22,9 +22,11 @@ def roll_and_take_image():
 
     led.on()
     with io.BytesIO() as stream:
-        with PiCamera() as camera:
-            camera.resolution = (720, 480)
-            camera.capture(stream, 'jpeg')
+        camera = Picamera2()
+        camera.configure(camera.create_still_configuration(main={"size": (720, 480)}))
+        camera.start()
+        camera.capture_file(stream, format='jpeg')
+        camera.close()
         bytes = stream.getvalue()
     led.off()
     return bytes
