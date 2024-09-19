@@ -2,5 +2,5 @@ Flask==2.3.3
 Flask-Limiter==3.4.0
 Flask-Cors==4.0.0
 gpiozero==1.6.2
-picamera==1.13
+picamera2==0.3.21
 rq==1.15.1
