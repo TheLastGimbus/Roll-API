@@ -128,11 +128,7 @@ ExecStart=/usr/bin/python3 /home/pi/.local/bin/rq worker images --with-scheduler
 WantedBy=multi-user.target
 ```
 
-`roll-api-vision-worker.service`
-```ini
-# Identical as image-worker, except:
-ExecStart=/usr/bin/python3 /home/pi/Roll-API/vision_worker.py
-```
+`roll-api-vision-worker.service` is pretty much identical
 
 For a reverse proxy - a server that will manage SSL certificates and do other routing-stuff - I **strongly** recommend
 Caddy - it's boy-simple to set up! Here is part of my `Caddyfile` for RollAPI:
